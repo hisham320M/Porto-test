@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Porto Cafe - Secure Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body>
+
+    <!-- 1. شاشة الدخول الرئيسية (للعميل) -->
+    <div id="entry-screen" class="overlay-screen">
+        <div class="login-box">
+            <h2 class="brand-name">PORTO</h2>
+            <p class="brand-desc">ملاذك الهادئ حيث تلتقي النكهة بالأصالة في أجواء بوهيمية دافئة.</p>
+            <form id="login-form">
+                <input type="text" id="user-name" required placeholder="الاسم بالكامل">
+                <input type="tel" id="user-phone" required placeholder="رقم الموبايل">
+                <button type="submit" class="btn-action">دخول المتجر</button>
+            </form>
+            <!-- زر مخفي أو صغير للأدمن -->
+            <p class="admin-access-link" onclick="openAdminLogin()">دخول المسؤول (Admin)</p>
+        </div>
+    </div>
+
+    <!-- 2. شاشة تسجيل دخول الأدمن (منفصلة تماماً) -->
+    <div id="admin-login-screen" class="overlay-screen">
+        <div class="login-box">
+            <h3 style="color: var(--boho-olive);">تسجيل دخول الإدارة</h3>
+            <div class="admin-form">
+                <input type="text" id="admin-user" placeholder="اليوزر">
+                <input type="tel" id="admin-phone" placeholder="رقم الهاتف">
+                <input type="password" id="admin-pass" placeholder="الباسورد">
+                <button class="btn-action" style="background: var(--boho-olive);" onclick="verifyAdmin()">تسجيل الدخول</button>
+                <button class="btn-action" style="background: #666;" onclick="closeAdminLogin()">رجوع</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. واجهة المستخدم العادي (المنيو) -->
+    <div id="main-content">
+        <header>
+            <h1>PORTO CAFE</h1>
+            <p class="slogan">"كل رشفة حكاية، وكل لحظة راحة"</p>
+        </header>
+        <div class="container">
+            <div id="welcome-text" class="welcome-badge"></div>
+            <div class="category-nav" id="client-cat-nav"></div>
+            <div class="menu-grid" id="client-menu-items"></div>
+            <div class="cart-section">
+                <h3>سلة طلباتك 🧾</h3>
+                <div id="cart-list"></div>
+                <div id="total-display" class="total-price">الإجمالي: 0 ج.م</div>
+                <input type="text" id="user-address" placeholder="العنوان بالتفصيل">
+                <button onclick="sendToWhatsapp()" class="whatsapp-btn">تأكيد الطلب (WhatsApp)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. لوحة تحكم الأدمن (محمية) -->
+    <div id="admin-dashboard">
+        <header><h1>لوحة تحكم الإدارة</h1></header>
+        <div class="container">
+            <div class="admin-controls-top">
+                <button class="btn-save" onclick="saveAllToFirebase()">💾 حفظ التغييرات للجميع</button>
+                <button class="btn-logout" onclick="adminLogout()">🚪 تسجيل الخروج</button>
+            </div>
+
+            <!-- إدارة الأقسام والمنتجات وسجل الزوار (نفس الأكواد السابقة) -->
+            <div class="admin-section" id="categories-mgmt">
+                <h3>إدارة الأقسام</h3>
+                <div class="flex-input">
+                    <input type="text" id="new-cat-name" placeholder="قسم جديد">
+                    <button onclick="addCategory()">إضافة</button>
+                </div>
+                <div id="admin-cat-list"></div>
+            </div>
+
+            <div class="admin-section" id="products-mgmt">
+                <h3>إضافة منتج جديد</h3>
+                <input type="text" id="p-name" placeholder="الاسم">
+                <input type="number" id="p-price" placeholder="السعر">
+                <input type="text" id="p-img" placeholder="رابط الصورة">
+                <select id="p-cat"></select>
+                <button class="btn-action" onclick="addProduct()">إضافة للمنيو</button>
+                <hr>
+                <h3>المنتجات الحالية</h3>
+                <div id="admin-items-list"></div>
+            </div>
+
+            <div class="admin-section">
+                <h3>سجل الزوار</h3>
+                <table id="logs-table">
+                    <thead><tr><th>الاسم</th><th>الهاتف</th><th>الوقت</th></tr></thead>
+                    <tbody id="users-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

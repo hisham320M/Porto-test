@@ -1,0 +1,9 @@
+/* إخفاء لوحة التحكم والمنيو افتراضياً */
+#main-content, #admin-dashboard, #admin-login-screen {
+    display: none;
+}
+
+/* شاشة الدخول هي الوحيدة التي تظهر في البداية */
+#entry-screen {
+    display: flex;
+}
